@@ -871,7 +871,8 @@ async function finePointerOk($: EngineInterface): Promise<boolean> {
 }
 
 async function openFile($: EngineInterface, path: string): Promise<void> {
-  const { argv, init } = openCommand(await osName($), path)
+  const editor = (await $.env.get('TMUX')) ? (await $.env.get('VISUAL')) || (await $.env.get('EDITOR')) || 'vi' : undefined
+  const { argv, init } = openCommand(await osName($), path, editor)
   try {
     const run = await $.process.run(argv, init)
     if (run.exitCode !== 0) $.ui.toast(`could not open ${path} with ${argv[0]}: ${run.stderr.trim().split('\n')[0] || `exit ${run.exitCode}`}`)
