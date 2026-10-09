@@ -1408,7 +1408,9 @@ export const register: Register = (on, options) => {
               submitLabel="jump"
               value={t.query}
               onInput={(v: string) => void search($, v)}
-              onSubmit={(v: string) => void jump($, v).then(park)}
+              // leaving the field hands the focus back to the button that entered it, after
+              // this handler; park once that has happened
+              onSubmit={(v: string) => void jump($, v).then(() => $.clock.after(100, park))}
             />
           </Box>
           {t.query ? <Button key="clear" plain dimColor label={unicode ? '×' : '\u{f0156}'} onPress={() => void search($, '')} /> : null}
